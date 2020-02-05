@@ -57,7 +57,7 @@ dependencies {
     // Enable simulation gui support. Must check the box in vscode to enable support
     // upon debugging
     simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
-    compile files('lib/robotlib-1.0.jar')
+    compile 'com.team871:robotlib:1.2020.001'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
