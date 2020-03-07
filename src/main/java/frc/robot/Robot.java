@@ -7,10 +7,19 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.cameraserver.CameraServer;
+
+//import com.revrobotics.ColorSensorV3;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.configs.DefaultRobotConfig;
+import frc.robot.configs.XBoxConfig;
+import frc.robot.subsystems.BallSystem;
+import frc.robot.subsystems.ClimbingSystem;
+import frc.robot.subsystems.ControlPanel;
+import frc.robot.subsystems.DriveTrainWCD;
+import frc.robot.utils.sensors.ColorSensor;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,11 +28,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
-  DefaultRobotConfig robotConfig;
-  XBoxConfig xboxConfig;
-  DriveTrainWCD driveTrain;
-  BallSystem ballSystem;
+public class Robot extends TimedRobot{
+  //CameraServer
+  private DefaultRobotConfig robotConfig;
+  private XBoxConfig xboxConfig;
+
+  private DriveTrainWCD driveTrain;
+  private BallSystem ballSystem;
+  private ControlPanel controlPanel;
+  private ClimbingSystem climbingSystem;
+
+  //TODO: Please kill this
+  private ColorSensor colorSensor;
+
+  
   
 
   /**
@@ -36,6 +54,10 @@ public class Robot extends TimedRobot {
     xboxConfig = new XBoxConfig();
     driveTrain = new DriveTrainWCD(robotConfig);
     ballSystem = new BallSystem(robotConfig);
+    climbingSystem = new ClimbingSystem(robotConfig);
+    controlPanel = new ControlPanel(robotConfig);
+
+    // colorSensor = robotConfig.getPanelColorDetector();
   }
 
   /**
@@ -64,7 +86,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
+    
   }
 
   /**
@@ -80,12 +102,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    driveTrain.carDrive(xboxConfig.getDriveSpeedAxis(), xboxConfig.getDriveRotationAxis());
-     //driveTrain.tankDrive(xboxConfig.getLeftSpeedAxis(), xboxConfig.getRightSpeedAxis());
-     //xboxConfig.getDriveRotationAxis()); 
-     //ballSystem.operateCollector(xboxConfig.getGrabDeployButton(), xboxConfig.getGrabActivateButton());
-     //ballSystem.toggleConveyerSpeed(xboxConfig.getPutConveyorToggleButton());
-     //ballSystem.ballRelease(xboxConfig.getBallReleaseButton());
+    //TODO: Unkill everything important
+    driveTrain.carDrive(xboxConfig);
+    ballSystem.update(xboxConfig);
+    controlPanel.update(xboxConfig);
+
+    // colorSensor.getColor();
+
+    climbingSystem.update(xboxConfig);
+
+     //robot.hackTheBits                        //Hacks the bits
+     //robot.work                               //Makes the robot do what I want
+     //robot.win                                //yes
   }
 
   /** 

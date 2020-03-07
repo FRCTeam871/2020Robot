@@ -1,20 +1,21 @@
-package frc.robot;
+package frc.robot.utils.sensors;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.team871.io.sensor.DigitalSensor;
+
 public class FeedSensors {
 
-    private ArrayList<DigitalInput> feedDetectors = new ArrayList<DigitalInput>();
+    private ArrayList<DigitalSensor> feedDetectors = new ArrayList<DigitalSensor>();
 
-    public FeedSensors(DigitalInput... feedBallDetectors){
+    public FeedSensors(DigitalSensor... feedBallDetectors){
         this.feedDetectors.addAll(Arrays.asList(feedBallDetectors));
     } 
 
     public boolean getFull(){
         boolean isFull = true;
-        for(DigitalInput feedDetector : feedDetectors){
+        for(DigitalSensor feedDetector : feedDetectors){
             isFull &= feedDetector.get();
         }
         return isFull;   
@@ -22,7 +23,7 @@ public class FeedSensors {
 
     public int getBallCount(){
         int count = 0;
-        for(DigitalInput feedDetector : feedDetectors){
+        for(DigitalSensor feedDetector : feedDetectors){
             if(feedDetector.get()){
                 count++;
             }
@@ -32,7 +33,7 @@ public class FeedSensors {
 
     public boolean getEmpty(){
         boolean isEmpty = true;
-        for(DigitalInput feedDetector : feedDetectors){
+        for(DigitalSensor feedDetector : feedDetectors){
             isEmpty &= !feedDetector.get();
         }
         return isEmpty;   
