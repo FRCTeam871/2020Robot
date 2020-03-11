@@ -28,12 +28,8 @@ public class XBoxConfig implements JoystickConfig {
         systemsController = new GenericJoystick<>(1, Arrays.asList(XBoxButtons.values()),
                 Arrays.asList(XBoxAxes.values()));
         systemsController.getButton(XBoxButtons.LBUMPER).setMode(ButtonTypes.TOGGLE);
-        driveController.getButton(XBoxButtons.LBUMPER).setMode(ButtonTypes.RISING);
         systemsController.getButton(XBoxButtons.RBUMPER).setMode(ButtonTypes.RISING);
-        driveController.getButton(XBoxButtons.RBUMPER).setMode(ButtonTypes.RISING);
-        driveController.getButton(XBoxButtons.X).setMode(ButtonTypes.TOGGLE);
-        driveController.getButton(XBoxButtons.A).setMode(ButtonTypes.RISING);
-        systemsController.getButton(XBoxButtons.START).setMode(ButtonTypes.RISING);
+        systemsController.getButton(XBoxButtons.START).setMode(ButtonTypes.TOGGLE);
         systemsController.getButton(XBoxButtons.BACK).setMode(ButtonTypes.RISING);
         systemsController.getButton(XBoxButtons.RIGHTSTICK).setMode(ButtonTypes.RISING);
         systemsController.getButton(XBoxButtons.B).setMode(ButtonTypes.TOGGLE);
@@ -42,12 +38,22 @@ public class XBoxConfig implements JoystickConfig {
         colorButton = new ColorButton(systemsController.getButton(XBoxButtons.A));
         colorButton.setMode(ButtonTypes.RISING);
 
-        driveController.getAxis(XBoxAxes.LEFTY).setDeadband(.16);
-        driveController.getAxis(XBoxAxes.RIGHTY).setDeadband(.0);
-        driveController.getAxis(XBoxAxes.RIGHTX).setDeadband(.15);
+        
         systemsController.getAxis(XBoxAxes.LEFTY).setDeadband(.15);
         systemsController.getAxis(XBoxAxes.RIGHTY).setDeadband(0.1);
         
+        // Unjam button
+        driveController.getButton(XBoxButtons.LBUMPER).setMode(ButtonTypes.MOMENTARY);
+
+        // Vomit Button
+        driveController.getButton(XBoxButtons.RBUMPER).setMode(ButtonTypes.MOMENTARY);
+        driveController.getButton(XBoxButtons.X).setMode(ButtonTypes.TOGGLE);
+
+        // Nom Nom button
+        driveController.getButton(XBoxButtons.A).setMode(ButtonTypes.MOMENTARY);
+        driveController.getAxis(XBoxAxes.LEFTY).setDeadband(.16);
+        driveController.getAxis(XBoxAxes.RIGHTY).setDeadband(.0);
+        driveController.getAxis(XBoxAxes.RIGHTX).setDeadband(.15);
 
         speedAxis = (IModifiedAxis) () -> {
             return Math.pow(driveController.getAxis(XBoxAxes.LEFTY).getValue(), 3);
@@ -79,7 +85,7 @@ public class XBoxConfig implements JoystickConfig {
     
     @Override
     public IButton getVomitButton() {
-        return systemsController.getButton(XBoxButtons.RBUMPER);
+        return driveController.getButton(XBoxButtons.RBUMPER);
     }
 
     @Override
@@ -114,7 +120,8 @@ public class XBoxConfig implements JoystickConfig {
 
     @Override
     public IButton getNomNomButton() {
-        return systemsController.getButton(XBoxButtons.B);
+        return driveController.getButton(XBoxButtons.A);
+        //return systemsController.getButton(XBoxButtons.B);
     }
 
     @Override
@@ -122,4 +129,8 @@ public class XBoxConfig implements JoystickConfig {
         return systemsController.getAxis(XBoxAxes.LEFTY);
     }
 
+    @Override
+    public IButton getUnJamButton() {
+        return driveController.getButton(XBoxButtons.LBUMPER);
+    }
 }

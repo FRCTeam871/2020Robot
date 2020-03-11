@@ -131,10 +131,6 @@ public class ControlPanel {
         deployMotorSpeedEntry.setDouble(panelDeployMotor.get());
         panelSpeedEntry.setDouble(panelSpeedMotor.get());
         colorEntry.setString(panelColorDetector.getColor().name());
-        //lowerLimitEntry.setBoolean(((WPI_TalonSRX)panelDeployMotor).);
-        //upperLimitEntry.setBoolean(((WPI_TalonSRX)panelDeployMotor).getPositiveLimit().get());
-        
         SensorCollection sc = ((WPI_TalonSRX)panelDeployMotor).getSensorCollection();
-        // System.out.println("Fwd: " + sc.isFwdLimitSwitchClosed() + " Rev: " + sc.isRevLimitSwitchClosed());
     }
 }

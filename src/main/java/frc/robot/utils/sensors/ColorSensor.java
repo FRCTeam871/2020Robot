@@ -25,7 +25,7 @@ public class ColorSensor {
         colorMap.put(Colors.GREEN, new Color(.212, .537, .251));
         colorMap.put(Colors.BLUE, new Color(.175, .453, .372));
         colorMap.put(Colors.YELLOW, new Color(.305, .542, .154));
-        colorMap.put(Colors.NONE, new Color(1, 1, 1));
+        colorMap.put(Colors.NONE, new Color(0, 0, 0));
     }
     
     /**
@@ -44,7 +44,8 @@ public class ColorSensor {
 //TODO: debug, is btroken
         double smallestError = Double.MAX_VALUE;
         Colors theColor = Colors.NONE;
-        for(Colors color : Colors.values()){
+
+        for(Colors color : Colors.values()) {
             Color currentColor = colorMap.get(color);
             double error = Math.abs(redReading - currentColor.red) + Math.abs(greenReading - currentColor.green) + Math.abs(blueReading - currentColor.blue);
             if(error < smallestError && (System.currentTimeMillis() - lastColorChange) > 500){

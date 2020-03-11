@@ -3,6 +3,8 @@ package frc.robot.configs;
 import com.team871.io.sensor.DigitalSensor;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import frc.robot.utils.sensors.ColorSensor;
@@ -37,7 +39,7 @@ public interface RobotConfig {
      * Piston that releases the climbing mechanism
      * @return Solenoid of the piston that deploys the climb extension pistons below.
      */
-    public Solenoid getClimbReleasePiston();
+    public DoubleSolenoid getClimbReleasePiston();
 
     /**
      * Motor that activates the winch
@@ -67,13 +69,19 @@ public interface RobotConfig {
      * Optical sensor that detects if the chute is full.
      * @return FeedSensors of the sensor described above.
      */
-    public FeedSensors getFeedBallDetectors();
+    // public FeedSensors getFeedBallDetectors();
 
     /**
      * Optical sensor that detects the presence of a power cell in the Power Cell Collection Mechanism.
      * @return DigitalSensor of the sensor described above.
      */
-    public DigitalSensor getGrabBallDetector();
+    public DigitalSensor getGrabBallDetector0();
+
+    /**
+     * Optical sensor that detects the presence of a Power Cell in the beginning of the Chute
+     * @return DigitalSensor of the sensor described above
+     */
+    public DigitalSensor getGrabBallDetector1();
 
     /**
      * The Color Sensor that detects colors of the Control Panel. This is used to determine the position of the Control Panel.
@@ -93,4 +101,10 @@ public interface RobotConfig {
      * @return the network table with the corresponding key
      */
     public NetworkTable getNetworkTab(String tabKey);
+
+    /**
+     * The relay that releases the block from the relay system on the winch that prevents it from driving backwards
+     * @return relay described above
+     */
+    public Relay getReleaseRelay();
 }

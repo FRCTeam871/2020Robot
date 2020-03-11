@@ -5,9 +5,12 @@ import com.team871.hid.IButton;
 import com.team871.io.sensor.DigitalSensor;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Relay.Value;
 import frc.robot.configs.JoystickConfig;
 import frc.robot.configs.RobotConfig;
 
@@ -15,17 +18,21 @@ import frc.robot.configs.RobotConfig;
  * ClimbingSystem
  */
 public class ClimbingSystem {
-    //private Solenoid deployPiston;
+    private DoubleSolenoid deployPiston;
     private SpeedController winch;
     private DigitalSensor doneClimbingSensor;
+    private Relay winchReleaseRelay;
+    private double lastAxisVal = 0;
+    private long lastSignChange = 0;
 
     private NetworkTableEntry winchSpeedEntry;
     private NetworkTableEntry doneClimbingSensorEntry;
     private NetworkTableEntry deployPistonEntry;
 
     public ClimbingSystem(RobotConfig config){
-        //this.deployPiston = config.getClimbReleasePiston();
+        this.deployPiston = config.getClimbReleasePiston();
         this.winch = config.getClimbWinchMotor();
+        this.winchReleaseRelay = config.getReleaseRelay();
         this.doneClimbingSensor = config.getFinishClimbSensor();
 
         this.winchSpeedEntry = config.getNetworkTab("climbSysytem").getEntry("winchSpeed");
@@ -34,16 +41,35 @@ public class ClimbingSystem {
     }
 
     private void deploy(IButton climbReleaseButton) {
-        // BUTT ~Andy Baranec
-        if(climbReleaseButton.getValue() && DriverStation.getInstance().getMatchTime() <= 30 ) {
-            //deployPiston.set(false);
+        // "BUTT" ~Andy Baranec
+        //TODO: Resurect the thing below to make a time limit
+        if(climbReleaseButton.getValue() /**&& DriverStation.getInstance().getMatchTime() <= 30 */){
+            deployPiston.set(DoubleSolenoid.Value.kForward);
+        } else{
+            deployPiston.set(DoubleSolenoid.Value.kReverse);
         }
     }
-    
     private void hoist(IAxis winchAxis){
-        if(/*!deployPiston.get() && */(doneClimbingSensor.get())) {
-            winch.set(/**Math.min(0,*/winchAxis.getValue());
+        double axisVal = winchAxis.getValue();
+        if(axisVal <= 0) {
+            if(lastAxisVal >= 0){
+                lastSignChange = System.currentTimeMillis();
+            }
+            if((System.currentTimeMillis() - lastSignChange) >= 1500){
+                winchReleaseRelay.set(Value.kOff);
+            }
+            winch.set(axisVal);
+        } else if(axisVal > 0){
+            if(lastAxisVal <= 0){
+                lastSignChange = System.currentTimeMillis();
+            }
+
+            if((System.currentTimeMillis() - lastSignChange) >= 1000){
+                winch.set(winchAxis.getValue());
+            }
+            winchReleaseRelay.set(Value.kReverse);
         }
+        lastAxisVal = axisVal;
     }
 
     public void update(JoystickConfig controller){

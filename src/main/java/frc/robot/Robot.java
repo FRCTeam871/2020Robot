@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 
 //import com.revrobotics.ColorSensorV3;
 
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot{
   private BallSystem ballSystem;
   private ControlPanel controlPanel;
   private ClimbingSystem climbingSystem;
+  private Compressor compressor;
 
   //TODO: Please kill this
   private ColorSensor colorSensor;
@@ -56,6 +58,8 @@ public class Robot extends TimedRobot{
     ballSystem = new BallSystem(robotConfig);
     climbingSystem = new ClimbingSystem(robotConfig);
     controlPanel = new ControlPanel(robotConfig);
+    compressor = new Compressor();
+    compressor.start();
 
     // colorSensor = robotConfig.getPanelColorDetector();
   }
@@ -114,6 +118,7 @@ public class Robot extends TimedRobot{
      //robot.hackTheBits                        //Hacks the bits
      //robot.work                               //Makes the robot do what I want
      //robot.win                                //yes
+     
   }
 
   /** 

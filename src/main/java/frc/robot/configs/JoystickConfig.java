@@ -76,4 +76,10 @@ public interface JoystickConfig {
      * @return IAxis described above
      */
     public IAxis getDebugAxis();
+
+    /**
+     * Retreives the button to reverse the nom nom and vomit comit.
+     * @return
+     */
+    IButton getUnJamButton();
 }
