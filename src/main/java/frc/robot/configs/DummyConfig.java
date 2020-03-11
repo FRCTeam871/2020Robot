@@ -1,14 +1,6 @@
 package frc.robot.configs;
 
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ColorSensorV3;
-import com.team871.io.actuator.DoubleSolenoid871;
 import com.team871.io.actuator.ISolenoid;
 import com.team871.io.sensor.DigitalInputSensor;
 import com.team871.io.sensor.DigitalSensor;
@@ -16,22 +8,21 @@ import com.team871.io.sensor.DigitalSensor;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import frc.robot.dummyquarantine.DummySpeedController;
 import frc.robot.utils.sensors.ColorSensor;
 
-public class DefaultRobotConfig implements RobotConfig {
-
+public class DummyConfig implements RobotConfig {
+    
     private final SpeedController leftMotors;
     private final SpeedController rightMotors;
     private final SpeedController conveyorMotor;
     // private final Solenoid feedCloser;
-    private final DoubleSolenoid871 climbReleasePiston;
+    private final ISolenoid climbReleasePiston;
     private final SpeedController climbWinchMotor;
     private final DigitalSensor finishClimbSensor;
-    private final WPI_TalonSRX panelDeployMotor;
+    private final SpeedController panelDeployMotor;
     private final SpeedController panelSpinMotor;
     private final DigitalSensor ballDetector0;
     private final DigitalSensor ballDetector1;
@@ -39,7 +30,6 @@ public class DefaultRobotConfig implements RobotConfig {
     // private final FeedSensors feedDetectors;
     private final SpeedController grabbyMotor;
     private final Relay relayReleaseSol;
-    private Compressor compressor;
 
     /**
      * ___ // _|_|_ // ('_') // --(:)-- // ( : ) // ~ Jagger, Anthony, Sebastian,
@@ -48,7 +38,7 @@ public class DefaultRobotConfig implements RobotConfig {
 
     private NetworkTableInstance tabInst;
 
-    public DefaultRobotConfig() {
+    public DummyConfig() {
 
         tabInst = NetworkTableInstance.getDefault();
         tabInst.setServerTeam(871);
@@ -59,25 +49,25 @@ public class DefaultRobotConfig implements RobotConfig {
          */
 
         // SpeedControllers and Solenoids
-        leftMotors = new SpeedControllerGroup(new CANSparkMax(1, MotorType.kBrushless),
-                new CANSparkMax(2, MotorType.kBrushless));
-        rightMotors = new SpeedControllerGroup(new CANSparkMax(3, MotorType.kBrushless),
-                new CANSparkMax(4, MotorType.kBrushless));
-        leftMotors.setInverted(true);
+        leftMotors = new DummySpeedController();
+        rightMotors = new DummySpeedController();
+
         /**
          * Feeding Mechanism Hardware required for the feeding of balls through the
          * chute
          */
 
         // SpeedControllers and Solenoids
-        conveyorMotor = new WPI_VictorSPX(7);
+        conveyorMotor = new DummySpeedController();
+        
+        // Sensors
 
         /**
          * Grabbing Mechanism Hardware require for collecting the power cells
          */
 
         // SpeedControllers
-        grabbyMotor = new WPI_VictorSPX(9);
+        grabbyMotor = new DummySpeedController();
 
         // Sensors
         ballDetector0 = new DigitalInputSensor(0);
@@ -89,9 +79,21 @@ public class DefaultRobotConfig implements RobotConfig {
          */
 
         // SpeedControllers and Solenoids
-        climbReleasePiston = new DoubleSolenoid871(6, 7);
+        climbReleasePiston = new ISolenoid() {
+			@Override
+			public Value get() {
+				return Value.Off;
+			}
+
+			@Override
+			public void set(Value arg0) {	
+			}
+
+        };
+        
         relayReleaseSol = new Relay(0);
-        climbWinchMotor = new WPI_TalonFX(8);
+        climbWinchMotor = new DummySpeedController();
+
         finishClimbSensor = new DigitalInputSensor(13);
 
         /**
@@ -102,18 +104,8 @@ public class DefaultRobotConfig implements RobotConfig {
         panelColorDetector = new ColorSensor(new ColorSensorV3(Port.kOnboard));
 
         // SpeedControllers and Solenoids
-
-        panelDeployMotor = new WPI_TalonSRX(5);
-        panelDeployMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
-                LimitSwitchNormal.NormallyOpen);
-        panelDeployMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
-                LimitSwitchNormal.NormallyOpen);
-
-        panelSpinMotor = new WPI_VictorSPX(6);
-
-        
-        compressor = new Compressor();
-        compressor.start();
+        panelDeployMotor = new DummySpeedController();
+        panelSpinMotor = new DummySpeedController();
     }
 
     @Override

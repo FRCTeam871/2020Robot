@@ -1,14 +1,12 @@
 package frc.robot.configs;
 
+import com.team871.io.actuator.ISolenoid;
 import com.team871.io.sensor.DigitalSensor;
 
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import frc.robot.utils.sensors.ColorSensor;
-import frc.robot.utils.sensors.FeedSensors;
 
 public interface RobotConfig {
     /**
@@ -30,16 +28,10 @@ public interface RobotConfig {
     public SpeedController getConveyorMotor();
 
     /**
-     * Piston that regulates the flow of power cells out of the chute.
-     * @return Solenoid of the piston that regulates the flow of power cells out of the chute.
-     */
-    //public Solenoid getFeedCloser();
-
-    /**
      * Piston that releases the climbing mechanism
      * @return Solenoid of the piston that deploys the climb extension pistons below.
      */
-    public DoubleSolenoid getClimbReleasePiston();
+    public ISolenoid getClimbReleasePiston();
 
     /**
      * Motor that activates the winch
@@ -64,12 +56,6 @@ public interface RobotConfig {
      * @return SpeedController of the motor described above.
      */
     public SpeedController getPanelSpinMotor();
-
-    /**
-     * Optical sensor that detects if the chute is full.
-     * @return FeedSensors of the sensor described above.
-     */
-    // public FeedSensors getFeedBallDetectors();
 
     /**
      * Optical sensor that detects the presence of a power cell in the Power Cell Collection Mechanism.

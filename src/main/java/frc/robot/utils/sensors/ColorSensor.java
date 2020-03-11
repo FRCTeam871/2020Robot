@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.util.EnumMap;
 
 import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.utils.Colors;
 
@@ -16,6 +18,10 @@ public class ColorSensor {
 
     private final ColorSensorV3 colorSensor;
     private long lastColorChange;
+
+    private double[] sdvals = new double[3];
+
+    private Colors currentColor = Colors.NONE;
 
     public ColorSensor(final ColorSensorV3 colorSensor){
         this.colorSensor = colorSensor;
@@ -41,22 +47,33 @@ public class ColorSensor {
         final double redReading = colorSensor.getColor().red;
         final double greenReading = colorSensor.getColor().green;
         final double blueReading = colorSensor.getColor().blue;
-//TODO: debug, is btroken
-        double smallestError = Double.MAX_VALUE;
-        Colors theColor = Colors.NONE;
 
+        Colors theColor = Colors.NONE;
+        double smallestError = Double.MAX_VALUE;
         for(Colors color : Colors.values()) {
             Color currentColor = colorMap.get(color);
             double error = Math.abs(redReading - currentColor.red) + Math.abs(greenReading - currentColor.green) + Math.abs(blueReading - currentColor.blue);
-            if(error < smallestError && (System.currentTimeMillis() - lastColorChange) > 500){
-                lastColorChange = System.currentTimeMillis();
+
+            if(error < smallestError) {
                 smallestError = error;
                 theColor = color;
-                System.out.println("New color: " + theColor);
             }
         }
 
-        System.out.println("RGB Color Read is (R:" + format.format(redReading) + ",\t G:" + format.format(greenReading) + ", \t B:" + format.format(blueReading) + ") Current Color is " + theColor);
+        if(theColor != Colors.NONE && theColor != currentColor && System.currentTimeMillis() - lastColorChange > 500) {
+            lastColorChange = System.currentTimeMillis();
+            currentColor = theColor;
+        }
+
+        sdvals[0] = colorSensor.getRed();
+        sdvals[1] = colorSensor.getGreen();
+        sdvals[2] = colorSensor.getBlue();
+        SmartDashboard.putNumberArray("ColorRaw", sdvals);
+        sdvals[0] = redReading;
+        sdvals[1] = greenReading;
+        sdvals[2] = blueReading;
+        SmartDashboard.putNumberArray("ColorProc", sdvals);
+        SmartDashboard.putString("DetectedColor", currentColor.toString());
         return theColor;
     }
 }

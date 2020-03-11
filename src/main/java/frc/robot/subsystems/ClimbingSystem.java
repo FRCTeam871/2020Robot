@@ -2,15 +2,13 @@ package frc.robot.subsystems;
 
 import com.team871.hid.IAxis;
 import com.team871.hid.IButton;
+import com.team871.io.actuator.ISolenoid;
 import com.team871.io.sensor.DigitalSensor;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.SpeedController;
 import frc.robot.configs.JoystickConfig;
 import frc.robot.configs.RobotConfig;
 
@@ -18,7 +16,7 @@ import frc.robot.configs.RobotConfig;
  * ClimbingSystem
  */
 public class ClimbingSystem {
-    private DoubleSolenoid deployPiston;
+    private ISolenoid deployPiston;
     private SpeedController winch;
     private DigitalSensor doneClimbingSensor;
     private Relay winchReleaseRelay;
@@ -44,9 +42,9 @@ public class ClimbingSystem {
         // "BUTT" ~Andy Baranec
         //TODO: Resurect the thing below to make a time limit
         if(climbReleaseButton.getValue() /**&& DriverStation.getInstance().getMatchTime() <= 30 */){
-            deployPiston.set(DoubleSolenoid.Value.kForward);
+            deployPiston.set(ISolenoid.Value.Forward);
         } else{
-            deployPiston.set(DoubleSolenoid.Value.kReverse);
+            deployPiston.set(ISolenoid.Value.Reverse);
         }
     }
     private void hoist(IAxis winchAxis){

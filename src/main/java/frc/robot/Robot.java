@@ -7,19 +7,19 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 
 //import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.configs.DefaultRobotConfig;
+import frc.robot.configs.DummyConfig;
+import frc.robot.configs.RobotConfig;
 import frc.robot.configs.XBoxConfig;
 import frc.robot.subsystems.BallSystem;
 import frc.robot.subsystems.ClimbingSystem;
 import frc.robot.subsystems.ControlPanel;
 import frc.robot.subsystems.DriveTrainWCD;
-import frc.robot.utils.sensors.ColorSensor;
 
 
 /**
@@ -31,37 +31,26 @@ import frc.robot.utils.sensors.ColorSensor;
  */
 public class Robot extends TimedRobot{
   //CameraServer
-  private DefaultRobotConfig robotConfig;
+  private RobotConfig robotConfig;
   private XBoxConfig xboxConfig;
 
   private DriveTrainWCD driveTrain;
   private BallSystem ballSystem;
   private ControlPanel controlPanel;
   private ClimbingSystem climbingSystem;
-  private Compressor compressor;
-
-  //TODO: Please kill this
-  private ColorSensor colorSensor;
-
   
-  
-
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
-    robotConfig = new DefaultRobotConfig();
+    robotConfig = new DefaultRobotConfig(); //new DummyConfig();
     xboxConfig = new XBoxConfig();
     driveTrain = new DriveTrainWCD(robotConfig);
     ballSystem = new BallSystem(robotConfig);
     climbingSystem = new ClimbingSystem(robotConfig);
     controlPanel = new ControlPanel(robotConfig);
-    compressor = new Compressor();
-    compressor.start();
-
-    // colorSensor = robotConfig.getPanelColorDetector();
   }
 
   /**
@@ -106,13 +95,9 @@ public class Robot extends TimedRobot{
    */
   @Override
   public void teleopPeriodic() {
-    //TODO: Unkill everything important
     driveTrain.carDrive(xboxConfig);
     ballSystem.update(xboxConfig);
     controlPanel.update(xboxConfig);
-
-    // colorSensor.getColor();
-
     climbingSystem.update(xboxConfig);
 
      //robot.hackTheBits                        //Hacks the bits

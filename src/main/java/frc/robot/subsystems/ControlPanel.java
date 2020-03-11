@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.SensorCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.team871.hid.IButton;
-import com.team871.io.actuator.LimitedSpeedController;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -131,6 +128,5 @@ public class ControlPanel {
         deployMotorSpeedEntry.setDouble(panelDeployMotor.get());
         panelSpeedEntry.setDouble(panelSpeedMotor.get());
         colorEntry.setString(panelColorDetector.getColor().name());
-        SensorCollection sc = ((WPI_TalonSRX)panelDeployMotor).getSensorCollection();
     }
 }
